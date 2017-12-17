@@ -1,46 +1,437 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <title>LDL: LDP Design Language</title>
-    <script 
-     src='https://www.w3.org/Tools/respec/respec-w3c-common' 
-     class='remove'></script>
-    <script class='remove'>
-      var respecConfig = {
-        specStatus: "ED",
-        editors: [{
-          name: "Noorani Bakerally",
-          url: "http://your-site.com",
-        }],
+	<head>
+		<title>LDP Design Language (LDP-DL)</title>
+		<meta charset="utf-8">
+		<script src="https://www.w3.org/Tools/respec/respec-w3c-common" async class="remove"></script>
+		<script class="remove">
+		
+			
+		
+			var respecConfig = {
+        specStatus: "unofficial",
+        editors: [
+          {
+            name: "Noorani Bakerally",
+            company: "École Nationale Supérieure des Mines de Saint-Étienne",
+            companyURL: "http://www.mines-stetienne.fr/"
+          },
+          {
+            name: "Antoine Zimmermann",
+            company: "École Nationale Supérieure des Mines de Saint-Étienne",
+            companyURL: "http://www.mines-stetienne.fr/"
+          },
+        ],
         processVersion: 2017,
-        edDraftURI: "http://some.github.repo",
         shortName: "dahut"
       };
-    </script>
-  </head>
-  <body>
-    <section id='abstract'>
-      <p>
-        This is required.
-      </p>
-    </section>
-    <section id='sotd'>
-      <p>
-        This is required.
-      </p>
-    </section>
-    <section data-dfn-for="Foo">
-      <h2><dfn>Foo</dfn> interface</h2>
-      <pre class="idl">
-      interface Foo {
-        attribute Bar bar;
-        void doTheFoo();
-      };
-      </pre>
-     <p>The <a>Foo</a> interface is nice. Lets you do stuff.</p>
-     <p>The <dfn>bar</dfn> attribute, returns 🍺.</p>
-     <p>The <dfn>doTheFoo()</dfn> method, returns nothing.</p>
-    </section>
-  </body>
+      </script>
+		<style>
+
+			pre {
+				tab-size: 3;
+				-moz-tab-size: 3; /* Code for Firefox */
+				-o-tab-size: 3; /* Code for Opera */
+			}
+
+			th {
+				text-align: left;
+			}
+			table.rule { background-color: #EBEBE0; }
+			table.rule td { text-align: center; }
+			td.up { border-bottom:1px solid black; }
+			
+			td {
+				vertical-align: top;
+			}
+			
+			.algorithm {
+				background: #fafafc;
+				border-left-style: solid;
+				border-left-width: .5em;
+				border-color: #c0c0c0;
+				margin-bottom: 16px;
+				padding: 8px;
+			}
+			
+			.arg {
+				font-weight: bold;
+				color: #000080;
+			}
+
+			.def {
+				background: #fcfcfc;
+				border-left-style: solid;
+				border-left-width: .5em;
+				border-color: #c0c0c0;
+				margin-bottom: 16px;
+			}
+			
+			.def-sparql {
+			}
+			
+			.def-sparql-body {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			
+			.def-text {
+			}
+			
+			.def-text-body {
+			}
+			
+			.def-header {
+				color: #a0a0a0;
+				font-size: 16px;
+				padding-bottom: 8px;
+			}
+			
+			.diagram-class {
+				border: 1px solid black; 
+				border-radius: 4px; 
+				width: 360px;
+			}
+			
+			.diagram-class-name {
+				font-size: 16px; 
+				font-weight: bold; 
+				text-align: center;
+			}
+			
+			.diagram-class-properties {
+				border-top: 1px solid black; 
+			}
+			
+			.diagram-class-properties-start {
+				padding: 8px;
+			}
+			
+			.diagram-class-properties-section {
+				border-top: 1px dashed #808080;
+				padding: 8px;
+			}
+			
+			.focus-node-selected {
+				color: blue;
+			}
+			.focus-node-error {
+				color: red;
+			}
+
+			.triple-can-be-skipped {
+				color: grey;
+			}
+			.focus-node-error {
+				color: red;
+			}
+
+			.target-can-be-skipped {
+				color: darkslategray;
+				font-style: italic;
+			}
+			
+			.component-class {
+				font-weight: bold;
+				font-size: 16px;
+			}
+			
+			.parameter-context {
+				font-weight: bold;
+				font-size: 16px;
+			}
+			
+			.parameters {
+				font-weight: bold;
+				font-size: 16px;
+			}
+
+			.part-header {
+				font-weight: bold;
+			}
+			
+			.term {
+				font-style: italic;
+			}
+			
+			.term-def-header {
+				font-style: italic;
+				font-weight: bold;
+			}
+		
+			.term-table {
+				border-collapse: collapse;
+				border-color: #000000;
+				margin: 16px;
+			}
+
+			.term-table td, th {
+				border-width: 1px;
+				border-style: solid;
+				padding: 5px;
+			}
+		
+			.todo {
+				color: red;
+			}
+			
+			pre {
+				word-wrap: normal;
+			}
+
+			/* example pre taken / adapted from R2RML */
+			pre.shapes, pre.example-shapes, pre.example-data, pre.example-results, pre.example-other { margin-left: 0; padding: 0 2em; margin-top: 1.5em; padding: 1em; }
+			pre.example-shapes:before, pre.example-data:before, pre.example-results:before, pre.example-other:before { background: white; display: block; font-family: sans-serif; margin: -1em 0 0.4em -1em; padding: 0.2em 1em; }
+			pre.shapes, pre.example-shapes { background: #deb !important ; }
+
+			pre.shapes, pre.example-shapes, pre.example-shapes:before { border: 1px solid #bbb; }
+
+			pre.example-shapes:before { color: #888; content: "Example shapes graph"; width: 13em; }
+
+			pre.example-data { background: #eeb !important; }
+			pre.example-data, pre.example-data:before { border: 1px solid #cc9; }
+			pre.example-data:before { color: #996; content: "Example data graph"; width: 13em; }
+			pre.example-results { background: #edb !important; }
+			.example-results, .example-results:before, .example-results th, .example-results td { border: 1px solid #cca; }
+			pre.example-results:before { color: #997; content: "Example validation results"; width: 13em; }
+			pre.example-other { background: #bed !important; }
+			pre.example-other, pre.example-other:before { border: 1px solid #ddd; }
+			pre.example-other:before { color: #888; content: "Example"; width: 13em; }
+
+		
+		</style>
+	</head>
+	<body>
+
+		<section id="abstract">
+			<p>
+				This document describes LDP-DL, a language for describing the designs of Linked Data Platforms (LDP). The design aspects and other related constructs are expressed in the form of an RDF graph. RDF graphs that are used in this manner are called design documents. In a nutshell, a design document is to generate an LDP. A design document processor, referred as an LDPizer, takes one or more design documents, exploit data sources and generate an LDP dataset which can then be deployed on an LDP.
+			</p>
+		</section>
+
+		<section id="sotd">
+		</section>
+
+
+		<section class="introductory">
+			<h2>Document Outline</h2>
+			<p>
+				The introduction includes a <a href="#terminology">Terminology</a> section.
+			</p>
+			<p>
+				The sections 2 - 4 cover the <a>LDP-DL Core</a> language and may be read independently from the later sections.
+			</p>
+			<p>
+				The syntax of LDP-DL is RDF.
+				The examples in this document use Turtle [[!turtle]]. Other RDF serializations such as RDF/XML may be used in practice. The reader should be familiar with basic RDF concepts [[!rdf11-concepts]] such as triples and, for the advanced concepts of SHACL, with SPARQL [[!sparql11-query]].
+			</p>
+		</section>
+	
+		<section id="introduction">
+			<h2>Introduction</h2>
+			<p>
+				This specification introduces LDP-DL (LDP Design Language), a language for describing Linked Data Platforms (LDPs), with an overview of the key terminology and some examples to illustrate basic concepts.
+
+				The design of an LDP can be written in LDP-DL in a document referred to as a design document. A design document may specify numerous data sources. The input to an LDPizer is one or more design documents and the data sources. The LDPizer merges the content all design documents into one single design document, exploit the data sources based on the descriptions in the design document and generate what a structure referred to as an LDP dataset. An LDP dataset contains LDP RDF sources and their content in RDF. It is stored as RDF dataset having an empty default graph and one or more named graphs for every LDP RDF source. It serialized in the TriG format by default. Both the design documents and LDP datasets are expressed in RDF.
+
+				The document uses concepts from RDF Concepts and Abstract Syntax [RDF], the SPARQL Query language and Linked Data Platform 1.0. A reader's familiarity with the contents of these documents, as well as with the Turtle and TriG [[!trig]] syntax, is assumed.
+			</p>
+			<section id="terminology">
+				<h3>Terminology</h3>
+				<p>
+					Throughout this document, the following terminology is used.
+				</p>
+				<p>
+					Terminology that is linked to portions of RDF 1.1 Concepts and Abstract
+					Syntax is used in SHACL as defined there. Terminology that is linked to
+					portions of SPARQL 1.1 Query Language is used in SHACL as defined there. A
+					single linkage is sufficient to provide a definition for all occurences of a
+					particular term in this document.
+				</p>
+				<p>
+					Definitions are complete within this document, i.e., if there is no rule to
+					make some situation true in this document then the situation is false.
+				</p>
+				<div class="def" id="rdf-terminology">
+					<div class="term-def-header">Basic RDF Terminology</div>
+					<div>
+						This document uses the terms 
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-graph"><dfn data-lt="graph|graphs|RDF graphs">RDF graph</dfn></a>,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-triple"><dfn data-lt="triple|triples">RDF triple</dfn></a>,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-iri"><dfn data-lt="IRI|IRIs">IRI</dfn></a>,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-literal"><dfn data-lt="literal|literals">literal</dfn></a>,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-blank-node"><dfn data-lt="blank node|blank nodes">blank node</dfn></a>,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-node"><dfn data-lt="node|nodes">node</dfn></a> of an RDF graph,
+						<a href="http://www.w3.org/TR/rdf11-concepts/#dfn-rdf-term"><dfn>RDF term</dfn></a>, and
+						<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-subject"><dfn data-lt="subject|subjects">subject</dfn></a>,
+						<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-predicate"><dfn data-lt="predicate|predicates">predicate</dfn></a>, and
+						<a href="https://www.w3.org/TR/rdf11-concepts/#dfn-object"><dfn data-lt="object|objects">object</dfn></a> of RDF triples as defined in RDF 1.1 Concepts and Abstract Syntax [[!rdf11-concepts]].
+					</div>
+				</div>
+				<div class="def" id="ldp-terminology">
+					<div class="term-def-header">Basic LDP Terminology</div>
+					<div>
+						This document uses the terms 
+						<a href="https://www.w3.org/TR/ldp/#ldpbc"><dfn>LDP Basic Container (LDPBC)</dfn></a> and <a href="https://www.w3.org/TR/ldp/#ldprs"><dfn>LDP RDF Source (LDPRS)</dfn></a> as defined in Linked Data Platform 1.0 [[!ldp-w3c]].
+					</div>
+				</div>
+				<div class="def">
+					<div class="term-def-header">Binding, Solution</div>
+					<div>
+						A <dfn data-lt="bindings">binding</dfn> is a pair (<a href="https://www.w3.org/TR/sparql11-query/#defn_QueryVariable">variable</a>, <a>RDF term</a>), consistent with the term's use in <a href="https://www.w3.org/TR/sparql11-query/">SPARQL</a>.
+					    A <dfn data-lt="solutions">solution</dfn> is a set of bindings, informally often understood as one row in the body of the result table of a SPARQL query.
+					    Variables are not required to be bound in a solution.
+					</div>
+				</div>
+			</section>
+
+			<section id="conventions">
+				<h3>Document Conventions</h3>
+				<p>
+					Within this document, the following namespace prefix bindings are used:
+				</p>
+				<table class="term-table">
+					<tr>
+						<th>Prefix</th>
+						<th>Namespace</th>
+					</tr>
+					<tr>
+						<td><code>rdf:</code></td>
+						<td><code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code></td>
+					</tr>
+					<tr>
+						<td><code>rdfs:</code></td>
+						<td><code>http://www.w3.org/2000/01/rdf-schema#</code></td>
+					</tr>
+					<tr>
+						<td><code>sh:</code></td>
+						<td><code><a href="http://www.w3.org/ns/shacl">http://www.w3.org/ns/shacl#</a></code></td>
+					</tr>
+					<tr>
+						<td><code>xsd:</code></td>
+						<td><code>http://www.w3.org/2001/XMLSchema#</code></td>
+					</tr>
+					<tr>
+						<td><code>ex:</code></td>
+						<td><code>http://example.com/ns#</code></td>
+					</tr>
+				</table>
+				<p>
+					Note that the URI of the graph defining the SHACL vocabulary itself is equivalent to
+					the namespace above, i.e. it includes the <code>#</code>.
+					References to the SHACL vocabulary, e.g. via <code>owl:imports</code> should include the <code>#</code>.
+				</p>
+				<p>
+					Throughout the document, color-coded boxes containing RDF graphs in Turtle will appear.
+					These fragments of Turtle documents use the prefix bindings given above.
+				</p>
+				<pre class="example-shapes">
+# This box represents an input shapes graph
+
+# Triples that can be omitted are marked as grey e.g.
+<span class="triple-can-be-skipped">&lt;s&gt; &lt;p&gt; &lt;o&gt; .</span></pre>
+
+				<pre class="example-data">
+# This box represents an input data graph.
+# When highlighting is used in the examples:
+
+# Elements highlighted in blue are <a>focus nodes</a>
+<span class="focus-node-selected">ex:Bob</span> a ex:Person .
+
+# Elements highlighted in red are focus nodes that fail <a href="#validation">validation</a>
+<span class="focus-node-error">ex:Alice</span> a ex:Person .</pre>
+
+				<pre class="example-results">
+# This box represents an output results graph</pre>
+
+				<p>
+					SHACL Definitions appear in blue boxes:
+				</p>
+				<div class="def def-sparql">
+					<div class="def-header">SPARQL or TEXTUAL DEFINITIONS</div>
+<pre class="def-sparql-body">
+# This box contains SPARQL or textual definitions. </pre>
+				</div>
+				
+				<p class="syntax">
+					Grey boxes such as this include syntax rules that apply to the <a>shapes graph</a>.
+				</p>
+				
+				<p>
+					<code>true</code> denotes the RDF term <code>"true"^^xsd:boolean</code>.
+					<code>false</code> denotes the RDF term <code>"false"^^xsd:boolean</code>.
+				</p>
+
+			</section>
+
+			<section id="conformance">
+				<p>
+					This document defines the <strong>SHACL Core</strong> language, also referred to as just <strong>SHACL</strong>, as described in Part A,
+					and the <strong>SHACL-SPARQL</strong> language that extends SHACL Core with constructs described in Part B.
+					This specification describes conformance criteria for:
+				</p>
+				<ul>
+					<li><strong>SHACL Core processors</strong> as processors that support validation with the SHACL Core Language</li>
+					<li><strong>SHACL-SPARQL processors</strong> as processors that support validation with the SHACL-SPARQL Language</li>
+				</ul>
+				<p>
+					This document includes syntactic rules that shapes and other nodes need to fulfill in the <a>shapes graph</a>.
+					These rules are typically of the form <em>A shape must have...</em> or <em>The values of X are literals</em> or <em>All objects of triples with predicate P must be IRIs</em>.
+					The complete list of these rules can be found in the <a href="#syntax-rules">appendix</a>.
+					Nodes that violate any of these rules are called <dfn>ill-formed</dfn>.
+					Nodes that violate none of these rules are called <dfn>well-formed</dfn>.
+					A <a>shapes graph</a> is ill-formed if it contains at least one ill-formed node.
+				</p>
+				<p><em>The remainder of this section is informative.</em></p>
+				<p>
+					SHACL Core processors that do not also support SHACL-SPARQL ignore any SHACL-SPARQL constructs
+					such as <code>sh:sparql</code> <a>triples</a>.
+				</p>
+			</section>
+
+		    <section>
+		      <h2>LDPizers and Design Documents</h2>
+		    </section>
+
+		    <section class=appendix>
+		      <h2>RDF Terminology</h2>
+		    </section>
+
+		    <section class=appendix>
+		      <h2>Index of LDP-DL Vocabulary Terms</h2>
+		      <section class=appendix>
+		        <h2>Classes</h2>
+		      </section>
+		      <section class=appendix>
+		        <h2>Properties</h2>
+		      </section>
+		      <section class=appendix>
+		        <h2>Other terms</h2>
+		      </section>
+		    </section>
+
+		    <section class=appendix>
+		      <h2>References</h2>
+		    </section>
+
+	
+		
+		<div style="padding-top: 30px"> <!-- ALH: really??? -->
+			<h1 id="part1" style="font-size: 160%; font-weight: bold">Part 1: SHACL Core</h1>
+		</div>
+
+		
+		
+	</body>
+
+	<script type="text/javascript">
+
+		tooltip = "Targets are not the only way to initiate validation, SHACL also allows specific nodes to be validated against specific shapes.";
+		var t = document.getElementsByClassName("target-can-be-skipped");
+		for (var i = 0; i < t.length; i++) {
+			t[i].title = tooltip;
+		}
+		
+	</script>
+
 </html>
